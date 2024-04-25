@@ -14,13 +14,13 @@ class Identity(nn.Module):
         return x
 
 class ResNet(torch.nn.Module):
-    def __init__(self, input_shape, hp):
+    def __init__(self, hp):
         super(ResNet, self).__init__()
         if hp.model == "ResNet18":
-            self.network = torchvision.models.resnet18(pretrained=True)
+            self.network = torchvision.models.resnet18(weights=True)
             self.n_outputs = 512
         else:
-            self.network = torchvision.models.resnet50(pretrained=True)
+            self.network = torchvision.models.resnet50(weights=True)
             self.n_outputs = 2048
 
         # save memory
@@ -57,4 +57,3 @@ def Classifier(in_features, out_features, is_nonlinear=False):
             torch.nn.Linear(in_features // 4, out_features))
     else:
         return torch.nn.Linear(in_features, out_features)
-

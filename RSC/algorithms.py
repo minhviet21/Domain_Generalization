@@ -9,10 +9,10 @@ from hyperparameter import Hyperparameter
 hp = Hyperparameter()
 
 class ERM(torch.nn.Module):
-    def __init__(self, input_shape, num_classes, num_domains, hp):
+    def __init__(self, num_classes, num_domains, hp):
         super(ERM, self).__init__()
         self.hp = hp
-        self.featurizer = networks.ResNet(input_shape, self.hp)
+        self.featurizer = networks.ResNet(self.hp)
         self.classifier = networks.Classifier(self.featurizer.n_outputs, num_classes,
                                               self.hp.nonlinear_classifier)
 
@@ -35,8 +35,8 @@ class ERM(torch.nn.Module):
         return self.network(x)
 
 class RSC(ERM):
-    def __init__(self, input_shape, num_classes, num_domains, hp):
-        super(RSC, self).__init__(input_shape, num_classes, num_domains,
+    def __init__(self, num_classes, num_domains, hp):
+        super(RSC, self).__init__(num_classes, num_domains,
                                    hp)
         self.drop_f = (1 - hp.rsc_f_drop_factor) * 100
         self.drop_b = (1 - hp.rsc_b_drop_factor) * 100
@@ -89,5 +89,3 @@ class RSC(ERM):
         self.optimizer.step()
 
         return {'loss': loss.item()}
-
-a = ERM(1, 1, 1, hp)
