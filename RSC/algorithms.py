@@ -4,7 +4,7 @@ import torch.nn.functional as F
 import torch.autograd as autograd
 
 import numpy as np
-from networks import Resnet, Classifier
+import networks
 from hyperparameter import Hyperparameter
 hp = Hyperparameter()
 
@@ -12,8 +12,8 @@ class ERM(torch.nn.Module):
     def __init__(self, num_classes, num_domains, hp):
         super(ERM, self).__init__()
         self.hp = hp
-        self.featurizer = ResNet(self.hp)
-        self.classifier = Classifier(self.featurizer.n_outputs, num_classes,
+        self.featurizer = networks.ResNet(self.hp)
+        self.classifier = networks.Classifier(self.featurizer.n_outputs, num_classes,
                                               self.hp.nonlinear_classifier)
 
         self.network = nn.Sequential(self.featurizer, self.classifier)
