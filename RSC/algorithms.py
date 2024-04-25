@@ -22,7 +22,7 @@ class ERM(torch.nn.Module):
                                           weight_decay=self.hp.weight_decay)
 
     def update(self):
-        for images, labels in train_loader:
+        for images, labels in self.train_loader:
             outputs = self.predict(images)
             loss = F.cross_entropy(outputs, labels)
             self.optimizer.zero_grad()
