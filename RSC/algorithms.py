@@ -12,24 +12,24 @@ class ERM(torch.nn.Module):
     def __init__(self, num_classes, num_domains, hp):
         super(ERM, self).__init__()
         self.hp = hp
-        self.featurizer = networks.ResNet(self.hp)
-        self.classifier = networks.Classifier(self.featurizer.n_outputs, num_classes,
+        self.featurizer = ResNet(self.hp)
+        self.classifier = Classifier(self.featurizer.n_outputs, num_classes,
                                               self.hp.nonlinear_classifier)
 
         self.network = nn.Sequential(self.featurizer, self.classifier)
         self.optimizer = torch.optim.Adam(self.network.parameters(), lr=self.hp.lr,
                                           weight_decay=self.hp.weight_decay)
 
-    def update(self, minibatches, unlabeled=None):
-        all_x = torch.cat([x for x, y in minibatches])
-        all_y = torch.cat([y for x, y in minibatches])
-        loss = F.cross_entropy(self.predict(all_x), all_y)
+    def update(self):
+        for images, labels in train_loader:
+            outputs = self.predict(images)
+            loss = F.cross_entropy(outputs, labels)
+            self.optimizer.zero_grad()
+            loss.backward()
+            self.optimizer.step()
+            return loss.item()
 
-        self.optimizer.zero_grad()
-        loss.backward()
-        self.optimizer.step()
-
-        return {'loss': loss.item()}
+        return loss.item()
 
     def predict(self, x):
         return self.network(x)
@@ -42,7 +42,7 @@ class RSC(ERM):
         self.drop_b = (1 - hp.rsc_b_drop_factor) * 100
         self.num_classes = num_classes
 
-    def update(self, minibatches, unlabeled=None):
+    def update(self):
         device = "cuda" if minibatches[0][0].is_cuda else "cpu"
 
         # inputs
