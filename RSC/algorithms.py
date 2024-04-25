@@ -9,9 +9,11 @@ from hyperparameter import Hyperparameter
 hp = Hyperparameter()
 
 class ERM(torch.nn.Module):
-    def __init__(self, num_classes, num_domains, hp):
+    def __init__(self, num_classes, num_domains, hp, train_loader):
         super(ERM, self).__init__()
         self.hp = hp
+        self.train_loader = self.train_loader
+
         self.featurizer = networks.ResNet(self.hp)
         self.classifier = networks.Classifier(self.featurizer.n_outputs, num_classes,
                                               self.hp.nonlinear_classifier)
@@ -21,7 +23,7 @@ class ERM(torch.nn.Module):
                                           weight_decay=self.hp.weight_decay)
 
     def update(self):
-        for images, labels in train_loader:
+        for images, labels in self.train_loader:
             outputs = self.predict(images)
             loss = F.cross_entropy(outputs, labels)
             self.optimizer.zero_grad()
