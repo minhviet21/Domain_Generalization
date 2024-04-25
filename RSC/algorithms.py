@@ -4,7 +4,7 @@ import torch.nn.functional as F
 import torch.autograd as autograd
 
 import numpy as np
-import networks
+from networks import Resnet, Classifier
 from hyperparameter import Hyperparameter
 hp = Hyperparameter()
 
