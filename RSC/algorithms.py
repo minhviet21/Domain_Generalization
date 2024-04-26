@@ -37,9 +37,9 @@ class ERM(torch.nn.Module):
         return self.network(x)
 
 class RSC(ERM):
-    def __init__(self, num_classes, num_domains, hp):
-        super(RSC, self).__init__(num_classes, num_domains,
-                                   hp)
+    def __init__(self, num_classes, num_domains, hp, train_loader):
+        super(RSC, self).__init__(num_classes, num_domains, 
+                                   hp, train_loader)
         self.drop_f = (1 - hp.rsc_f_drop_factor) * 100
         self.drop_b = (1 - hp.rsc_b_drop_factor) * 100
         self.num_classes = num_classes
