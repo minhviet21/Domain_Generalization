@@ -80,7 +80,7 @@ class RSC(ERM):
             all_p_muted_again = self.classifier(all_f * mask)
 
             # Equation (5): update
-            loss = F.cross_entropy(all_p_muted_again, all_y)
+            loss = F.cross_entropy(all_p_muted_again, labels)
             self.optimizer.zero_grad()
             loss.backward()
             self.optimizer.step()
