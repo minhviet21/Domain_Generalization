@@ -12,7 +12,7 @@ class ERM(torch.nn.Module):
     def __init__(self, num_classes, num_domains, hp, train_loader):
         super(ERM, self).__init__()
         self.hp = hp
-        self.train_loader = self.train_loader
+        self.train_loader = train_loader
 
         self.featurizer = networks.ResNet(self.hp)
         self.classifier = networks.Classifier(self.featurizer.n_outputs, num_classes,
