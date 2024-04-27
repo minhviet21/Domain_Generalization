@@ -1,5 +1,5 @@
 from torchvision import transforms
-from dataset import OfficeHomeDataset
+from dataset.OfficeHome import OfficeHomeDataset
 import torch
 
 data_dir = "/content/drive/MyDrive/OfficeHome"

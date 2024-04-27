@@ -1,7 +1,7 @@
 from torch import nn
 import torch.optim as optim
-from model import ResnetModel
-from transform import train_loader
+from model.model import ResnetModel
+from dataset.transform import train_loader
 
 model = ResnetModel(num_classes=65)
 model.set_optimizer(optim.Adam(model.parameters(), lr=0.001))
