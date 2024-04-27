@@ -1,15 +1,7 @@
 import torch
 import torch.optim as optim
-from torch import nn
 from model.ResnetBase import ResnetModel
-from dataset.transform import transform
-from dataset.OfficeHome import OfficeHomeDataset
-
-data_dir = "/content/drive/MyDrive/OfficeHome"
-domains = ["Art", "Clipart"]
-
-dataset = OfficeHomeDataset(root_dir=data_dir, domains=domains, transform=transform)
-train_loader = torch.utils.data.DataLoader(dataset, batch_size=32, shuffle=True)
+from dataset.transform import train_loader
 
 model = ResnetModel(num_classes=65)
 model.set_optimizer(optim.Adam(model.parameters(), lr=0.001))
