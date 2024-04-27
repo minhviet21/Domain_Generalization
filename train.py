@@ -13,4 +13,3 @@ for epoch in range(10):
         loss = model.update(x, y)
     model.update_lr()
     print(f"Epoch {epoch+1}, Loss: {loss}")
-    
