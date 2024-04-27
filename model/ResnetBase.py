@@ -29,4 +29,3 @@ class ResnetModel(nn.Module):
     
     def update_lr(self):
         self.scheduler.step()
-
