@@ -1,7 +1,8 @@
 import torch
 import torch.optim as optim
 from torch import nn
-from model.ResnetBase import ResnetModel
+from model.ResnetBase import ResnetBase
+from model.ResnetRSC import ResnetRSC
 from dataset.transform import transform
 from dataset.OfficeHome import OfficeHomeDataset
 
