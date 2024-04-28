@@ -40,7 +40,7 @@ class ResnetBase(nn.Module):
         return self.network(x)
     
     def update(self, x, y):
-        outputs = self(x)
+        outputs = self.forward(x)
         loss = self.loss_fn(outputs, y)
         self.optimizer.zero_grad()
         loss.backward()
