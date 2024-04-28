@@ -1,4 +1,4 @@
-from ResnetBase import ResnetBase
+from model.ResnetBase import ResnetBase
 import torch
 import torch.nn.functional as F
 import torch.autograd as autograd
