@@ -58,6 +58,3 @@ class ResnetBase(nn.Module):
     
     def update_lr(self):
         self.scheduler.step()
-
-a= ResnetBase(10, True)
-print(a)
