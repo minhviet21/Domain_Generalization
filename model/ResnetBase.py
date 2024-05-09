@@ -1,4 +1,5 @@
 from torchvision.models import resnet50
+from torchvision.models import ResNet50_Weights
 from torch import nn
 
 class Identity(nn.Module):
