@@ -91,7 +91,7 @@ def main():
         if epoch % 10 == 0:
             accuracy, precision, recall = evaluate(epoch, test_loader, test_domain[0])
             
-            with open(eval, 'a') as f:
+            with open(eval_metrics, 'a') as f:
                 f.write(f"Epoch{epoch}: \n{accuracy} \n{precision} \n{recall}\n\n\n")
             
             
