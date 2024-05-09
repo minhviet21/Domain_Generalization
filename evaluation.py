@@ -38,8 +38,13 @@ def evaluate(epoch, test_loader, test_domain):
                     corrects[labels[i]] += 1
                 
     accuracy = sum(corrects) / sum(instances)
+    
     for i in range(len(instances)):
-        precision[i] = corrects[i] / predictions[i]
+        if predictions[i] == 0:
+            precision[i] = 0
+        else:
+            precision[i] = corrects[i] / predictions[i]
+        
         recall[i] = corrects[i] / instances[i]
             
     return accuracy, precision, recall

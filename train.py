@@ -92,7 +92,7 @@ def main():
             accuracy, precision, recall = evaluate(epoch, test_loader, test_domain[0])
             
             with open(eval, 'a') as f:
-                f.write(f"{accuracy}, {precision}, {recall}\n")
+                f.write(f"Epoch{epoch}: \n{accuracy} \n{precision} \n{recall}\n\n\n")
             
             
 if __name__ == "__main__":
