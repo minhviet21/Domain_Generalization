@@ -10,7 +10,7 @@ class Identity(nn.Module):
 class Featurizer(nn.Module):
     def __init__(self, num_classes):
         super(Featurizer, self).__init__()
-        self.resnet = resnet50(weights=None)
+        self.resnet = resnet50(weights=ResNet50_Weights.IMAGENET1K_V2)
         
         del self.resnet.fc
         self.resnet.fc = Identity()  
