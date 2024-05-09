@@ -1,7 +1,4 @@
 import torch
-from torch import nn
-from model.ResnetBase import ResnetBase
-from model.ResnetRSC import ResnetRSC
 from dataset.transform import transform
 from dataset.OfficeHome import OfficeHomeDataset
 
@@ -12,30 +9,33 @@ def evaluate(epoch, test_loader, test_domain):
     checkpoint = f"checkpoint_{epoch}_test_on_{test_domain}.pth.tar"
     checkpoint = torch.load(checkpoint)
     model = checkpoint['model']
-    
+    model.to(device)
     model.eval()
     
-    corrects = []
-    instances = []
-    predictions = []
+    num_classes = 65
+    corrects = [0]*num_classes
+    instances = [0]*num_classes
+    predictions = [0]*num_classes
     
     accuracy = 0
-    precision = []
-    recall = []
+    precision = [0]*num_classes
+    recall = [0]*num_classes
     
     with torch.no_grad():
-        for image, label in test_loader:
-            image, label = image.to(device), label.to(device)
-            label = int(label.item())
-            pred_labels = model(image)
-            pred_label = torch.max(pred_labels, dim=2)
-            pred_label = int(pred_label.item())
+        for images, labels in test_loader:
+            images, labels = images.to(device), labels.to(device)
+            labels = labels.tolist()
             
-            instances[label] += 1
-            predictions[pred_label] += 1
+            pred_labels = model(images)
+            (_, pred_labels) = torch.max(pred_labels, dim=1)
+            pred_labels = pred_labels.tolist()
             
-            if pred_label == label:
-                corrects[label] += 1
+            for i in range(len(labels)):
+                instances[labels[i]] += 1
+                predictions[pred_labels[i]] += 1
+                
+                if pred_labels[i] == labels[i]:
+                    corrects[labels[i]] += 1
                 
     accuracy = sum(corrects) / sum(instances)
     for i in range(len(instances)):
@@ -43,3 +43,12 @@ def evaluate(epoch, test_loader, test_domain):
         recall[i] = corrects[i] / instances[i]
             
     return accuracy, precision, recall
+
+if __name__ == "__main__":
+    data_dir = "./dataset/OfficeHomeDataset"
+    test_domain = ["Real World"]
+    
+    test_dataset = OfficeHomeDataset(root_dir=data_dir, domains=test_domain, transform=transform)
+    test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=16, shuffle=False)
+    
+    evaluate(0, test_loader, test_domain[0])
