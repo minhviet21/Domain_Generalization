@@ -1,7 +1,7 @@
 from torchvision.models import resnet50
 from torchvision.models import ResNet50_Weights
 from torch import nn
-
+import torch
 class Identity(nn.Module):
     def __init__(self):
         super(Identity, self).__init__()
@@ -12,8 +12,7 @@ class Featurizer(nn.Module):
     def __init__(self, num_classes):
         super(Featurizer, self).__init__()
         self.resnet = resnet50(weights=ResNet50_Weights.IMAGENET1K_V2)
-        
-        del self.resnet.fc
+        # del self.resnet.fc
         self.resnet.fc = Identity()  
 
     def forward(self,x):
@@ -41,6 +40,11 @@ class ResnetBase(nn.Module):
         return self.network(x)
     
     def update(self, x, y):
+        if y.dim() > 2:
+            y1 = y.clone().detach()
+            y = torch.argmax(y1, dim=2)
+            y = torch.tensor(y, dtype=torch.long)
+            y = y.squeeze()
         outputs = self.forward(x)
         loss = self.loss_fn(outputs, y)
         self.optimizer.zero_grad()

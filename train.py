@@ -6,6 +6,7 @@ from model.ResnetBase import ResnetBase
 from model.ResnetRSC import ResnetRSC
 from dataset.transform import transform
 from dataset.OfficeHome import OfficeHomeDataset
+from dataset.Mixup import NewData
 from evaluation import evaluate
 from time import time
 
@@ -74,7 +75,8 @@ def main():
     model = model.to(device)
     train_dataset = OfficeHomeDataset(root_dir=data_dir, domains=train_domains, transform=transform)
     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-    
+    mixup_loader = NewData(a=0.2, b=0.2, num_classes=num_classes, loader=train_loader)
+
     test_dataset = OfficeHomeDataset(root_dir=data_dir, domains=test_domain, transform=transform)
     test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
     
@@ -94,15 +96,5 @@ def main():
             with open(eval_metrics, 'a') as f:
                 f.write(f"Epoch{epoch}: \n{accuracy} \n{precision} \n{recall}\n\n\n")
             
-            
 if __name__ == "__main__":
     main()
-            
-            
-            
-            
-
-    
-    
-    
-    
