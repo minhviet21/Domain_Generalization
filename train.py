@@ -60,7 +60,7 @@ def main():
     #Initialize the model or load checkpoint
     if checkpoint is None:
         start_epoch = 0
-        model = ResnetRSC(num_classes=num_classes, is_nonlinear = False, rsc_f_drop_factor = 0.33, rsc_b_drop_factor = 0.33)
+        model = ResnetRSC(num_classes=num_classes, is_nonlinear = False, rsc_f_drop_factor = 0.33, rsc_b_drop_factor = 0.00)
         model.set_optimizer(optim.Adam(model.parameters(), lr=lr))
         model.set_loss_fn(nn.CrossEntropyLoss())
         model.set_scheduler(optim.lr_scheduler.StepLR(model.optimizer, step_size=5, gamma=0.1))
