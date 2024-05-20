@@ -5,7 +5,7 @@ import torch.autograd as autograd
 import numpy as np
 
 class ResnetRSC(ResnetBase):
-    def __init__(self, num_classes, rsc_f_drop_factor = 0.33, rsc_b_drop_factor = 0.33, is_nonlinear=False):
+    def __init__(self, num_classes, rsc_f_drop_factor, rsc_b_drop_factor, is_nonlinear=False):
         super(ResnetRSC, self).__init__(num_classes, is_nonlinear)
         self.drop_f = (1 - rsc_f_drop_factor) * 100
         self.drop_b = (1 - rsc_b_drop_factor) * 100
