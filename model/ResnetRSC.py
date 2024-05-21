@@ -52,7 +52,7 @@ class ResnetRSC(ResnetBase):
 
         return loss.item()
 
-def update(self, x, y):
+    def update(self, x, y):
         outputs = self.forward(x)
         loss = F.cross_entropy(outputs, y)
         self.optimizer.zero_grad()
