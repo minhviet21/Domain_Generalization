@@ -101,8 +101,6 @@ def main():
 
         if epoch % 5 == 0:    
             save_checkpoint(epoch, model, model.optimizer)
-
-        if epoch % 10 == 0:
             accuracy, precision, recall = evaluate(epoch, test_loader, test_domain[0])
 
             with open(eval_metrics, 'a') as f:
