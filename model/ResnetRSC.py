@@ -11,7 +11,7 @@ class ResnetRSC(ResnetBase):
         self.drop_b = (1 - rsc_b_drop_factor) * 100
         self.num_classes = num_classes
 
-    def update(self, x, y):
+    def updateRSC(self, x, y):
         # one-hot labels
         all_o = torch.nn.functional.one_hot(y, self.num_classes)
         # features
