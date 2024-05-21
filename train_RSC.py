@@ -47,7 +47,7 @@ def train(model, train_dataset, epoch):
 
     for image, label in train_loader_1:
         image, label = image.to(device), label.to(device)
-        loss = model.update(image, label)
+        loss = model.updateRSC(image, label)
         losses.append(loss)
 
     for image, label in train_loader_2:
