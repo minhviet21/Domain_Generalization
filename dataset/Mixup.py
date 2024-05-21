@@ -8,9 +8,9 @@ class DataAugmentation():
     self.b=b
     self.minibatches=minibatches
     self.num_classes=num_classes
-  def indices_to_onehot(self,indices):
-    onehot=F.one_hot(indices, self.num_classes)
-    return onehot
+  # def indices_to_onehot(self,indices):
+  #   onehot=F.one_hot(indices, self.num_classes)
+  #   return onehot
   def random_pairs_of_minibatches(self):
     perm = torch.randperm(len((self.minibatches)[0])).tolist()
     pairs = []
@@ -38,15 +38,12 @@ class DataAugmentation():
     batch_x=[]
     batch_y=[]
     for (xi, yi), (xj, yj) in self.random_pairs_of_minibatches():
-      yi=self.indices_to_onehot(yi)
-      yj=self.indices_to_onehot(yj)
-
       lam = np.random.beta(self.a,self.b)
 
       x = lam * xi + (1 - lam) * xj
-      y=  lam * yi + (1-lam) *yj
+      # y=  lam * yi + (1-lam) *yj
       batch_x.append(x)
-      batch_y.append(y)
+      batch_y.append(torch.Tensor([yi,yj]))
     batch_x=torch.stack(batch_x)
     batch_y=torch.stack(batch_y)
 
