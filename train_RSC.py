@@ -12,7 +12,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 data_dir = "/kaggle/input/officehome/OfficeHomeDataset_10072016"
 num_classes = 65
-train_domains = ["Clipart"]
+train_domains = ["Clipart", "Product", "Real World"]
 test_domain = ["Art"]
 train_loss = "train_loss.txt"
 eval_metrics = "eval.txt"
