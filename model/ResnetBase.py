@@ -1,7 +1,7 @@
 from torchvision.models import resnet50
 from torchvision.models import ResNet50_Weights
 from torch import nn
-import torch
+import numpy as np
 class Identity(nn.Module):
     def __init__(self):
         super(Identity, self).__init__()
@@ -39,13 +39,24 @@ class ResnetBase(nn.Module):
     def forward(self, x):
         return self.network(x)
     
-    def update(self, x, y):
+    def update(self, x, y, batch_size, a, b):
+        objective = 0
         outputs = self.forward(x)
-        loss = self.loss_fn(outputs, y)
+        yi = y[:,0]
+        yj = y[:,1]
+        yi = yi.long()
+        yj = yj.long()
+        lam = np.random.beta(a,b)
+
+        objective += lam * self.loss_fn(outputs, yi)
+        objective += (1 - lam) * self.loss_fn(outputs, yj)
+        
+        objective /= batch_size
+
         self.optimizer.zero_grad()
-        loss.backward()
+        objective.backward()
         self.optimizer.step()
-        return loss.item()
+        return objective.item()
 
     def set_optimizer(self, optimizer):
         self.optimizer = optimizer

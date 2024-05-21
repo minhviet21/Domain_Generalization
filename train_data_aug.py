@@ -24,38 +24,38 @@ lr = 0.001
 iterations = 21000
 
 cudnn.benchmark = True
-    
+
 def save_checkpoint(epoch, model, optimizer):
     state = {'epoch': epoch,
              'model': model,
              'optimizer': optimizer}
     filename = f"checkpoint_{epoch}_test_on_{test_domain[0]}.pth.tar"
     torch.save(state, filename)
-    
+
 def train(model, train_loader, epoch):
     model.train()
     losses = []
-    
+
     start = time()
-    
+
     for image, label in train_loader:
         image, label = image.to(device), label.to(device)
-        loss = model.update(image, label)
+        loss = model.update(image, label, batch_size, 0.3, 0.3)
         losses.append(loss)
     model.update_lr()
-    
+
     end = time()
-    
-    avg_loss = sum(losses) / len(losses)
-    
+
+    avg_loss = sum(losses)
+
     print(f"Epoch {epoch+1}, Training Loss: {avg_loss}, Time: {end-start}")
     del image, label, losses
     return avg_loss
-    
+
 
 def main():
     global start_epoch, checkpoint, epoch
-    
+
     #Initialize the model or load checkpoint
     if checkpoint is None:
         start_epoch = 0
@@ -64,7 +64,7 @@ def main():
         model.set_loss_fn(nn.CrossEntropyLoss())
         model.set_scheduler(optim.lr_scheduler.StepLR(model.optimizer, step_size=5, gamma=0.1))
         save_checkpoint(start_epoch, model, model.optimizer)
-    
+
     else:
         checkpoint = torch.load(checkpoint)
         start_epoch = checkpoint['epoch'] + 1
@@ -72,29 +72,38 @@ def main():
         model.set_optimizer(checkpoint['optimizer'])
 
     model = model.to(device)
-    train_dataset = OfficeHomeDataset(root_dir=data_dir, domains=train_domains, transform=transform)
-    train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-    mixup_loader = NewData(a=0.3, b=0.3, num_classes=num_classes, loader=train_loader)
+    train_dataset1 = OfficeHomeDataset(root_dir=data_dir, domains=["Clipart"], transform=transform)
+    train_dataset2 = OfficeHomeDataset(root_dir=data_dir, domains=["Product"], transform=transform)
+    train_dataset3 = OfficeHomeDataset(root_dir=data_dir, domains=["Real World"], transform=transform)
+
+    train_loader1 = torch.utils.data.DataLoader(train_dataset1, batch_size=batch_size,shuffle=True)
+    train_loader2 = torch.utils.data.DataLoader(train_dataset2, batch_size=batch_size,shuffle=True)
+    train_loader3 = torch.utils.data.DataLoader(train_dataset3, batch_size=batch_size,shuffle=True)
+    lisa_loader_domain1 = NewData(a=0.3, b=0.3, num_classes=num_classes, loader=train_loader1)
+    lisa_loader_domain2=NewData(a=0.3, b=0.3, num_classes=num_classes, loader=train_loader2)
+    lisa_loader_domain3=NewData(a=0.3, b=0.3, num_classes=num_classes, loader=train_loader3)
+
 
     test_dataset = OfficeHomeDataset(root_dir=data_dir, domains=test_domain, transform=transform)
     test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
-    
-    epochs = iterations // (len(train_dataset) // batch_size)
-    
+
+    epochs = 10
+
     for epoch in range(start_epoch, epochs):
-        loss = train(model, mixup_loader, epoch)
-        
+      for loader in [lisa_loader_domain1,lisa_loader_domain2,lisa_loader_domain3]:
+        loss = train(model,loader, epoch)
+
         with open(train_loss, 'a') as f:
             f.write(f"{loss}")
-            
-        if epoch % 5 == 0:    
+
+        if epoch % 5 == 0:
             save_checkpoint(epoch, model, model.optimizer)
-        
+
         if epoch % 10 == 0:
             accuracy, precision, recall = evaluate(epoch, test_loader, test_domain[0])
-            
+
             with open(eval_metrics, 'a') as f:
                 f.write(f"Epoch{epoch}: \n{accuracy} \n{precision} \n{recall}\n\n\n")
-            
+
 if __name__ == "__main__":
     main()
