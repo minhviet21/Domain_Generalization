@@ -18,7 +18,7 @@ train_loss = "train_loss.txt"
 eval_metrics = "eval.txt"
 
 checkpoint = None
-batch_size = 2
+batch_size = 32
 lr = 0.001
 iterations = 50000
 
