@@ -40,11 +40,6 @@ class ResnetBase(nn.Module):
         return self.network(x)
     
     def update(self, x, y):
-        if y.dim() > 2:
-            y1 = y.clone().detach()
-            y = torch.argmax(y1, dim=2)
-            y = torch.tensor(y, dtype=torch.long)
-            y = y.squeeze()
         outputs = self.forward(x)
         loss = self.loss_fn(outputs, y)
         self.optimizer.zero_grad()
