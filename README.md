@@ -1,4 +1,4 @@
-## This is the source code of Domain Generalization In Image Classification Project of the course IT4343E at HUST.
+## This is the source code of Domain Generalization In Image Classification Project
 
 ## Contributions
 
