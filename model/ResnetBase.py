@@ -39,24 +39,32 @@ class ResnetBase(nn.Module):
     def forward(self, x):
         return self.network(x)
     
-    def update(self, x, y, batch_size, a, b):
-        objective = 0
-        outputs = self.forward(x)
-        yi = y[:,0]
-        yj = y[:,1]
-        yi = yi.long()
-        yj = yj.long()
-        lam = np.random.beta(a,b)
+    # def update(self, x, y, batch_size, a, b):
+        # objective = 0
+        # outputs = self.forward(x)
+        # yi = y[:,0]
+        # yj = y[:,1]
+        # yi = yi.long()
+        # yj = yj.long()
+        # lam = np.random.beta(a,b)
 
-        objective += lam * self.loss_fn(outputs, yi)
-        objective += (1 - lam) * self.loss_fn(outputs, yj)
+        # objective += lam * self.loss_fn(outputs, yi)
+        # objective += (1 - lam) * self.loss_fn(outputs, yj)
         
-        objective /= batch_size
+        # objective /= batch_size
 
+        # self.optimizer.zero_grad()
+        # objective.backward()
+        # self.optimizer.step()
+        # return objective.item()
+        
+    def update(self, x, y):  
+        outputs = self.forward(x)
+        loss = self.loss_fn(outputs, y)
         self.optimizer.zero_grad()
-        objective.backward()
+        loss.backward()
         self.optimizer.step()
-        return objective.item()
+        return loss.item()
 
     def set_optimizer(self, optimizer):
         self.optimizer = optimizer
