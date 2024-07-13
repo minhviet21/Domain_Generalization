@@ -9,16 +9,3 @@
 | 3   | Do Hoang Tuan     | 20214939   | tuan.dh214939@sis.hust.edu.vn          |
 | 4   | Dau Van Can       | 20214879   | can.dv214879@sis.hust.edu.vn           |
 | 5   | Nguyen Ba Duong   | 20214886   | duong.nb212886@sis.hust.edu.vn         |
-
-## Train model ##
-```
-!git clone https://github.com/minhviet21/Domain_Generalization_For_Image_Classification
-```
-```
-from google.colab import drive
-drive.mount('/content/drive/')
-```
-```
-%cd /content/Domain_Generalization_For_Image_Classification
-!python train.py
-```
